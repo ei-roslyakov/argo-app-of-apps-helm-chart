@@ -15,7 +15,7 @@ spec:
     repoURL: {{ .Values.metricsServer.source.repoURL }}
     targetRevision: {{ .Values.metricsServer.source.targetRevision }}
     chart: {{ .Values.metricsServer.source.chart }}
-    {{- if hasKey .Values.metricsServer.source "helm" }}
+    {{- if .Values.metricsServer.source.helm }}
     helm:
       values: |
 {{ .Values.metricsServer.source.helm.values | indent 8 }}

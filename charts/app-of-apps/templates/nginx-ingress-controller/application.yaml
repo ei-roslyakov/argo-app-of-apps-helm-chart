@@ -15,7 +15,7 @@ spec:
     repoURL: {{ .Values.nginxIngressController.source.repoURL }}
     targetRevision: {{ .Values.nginxIngressController.source.targetRevision }}
     chart: {{ .Values.nginxIngressController.source.chart }}
-    {{- if hasKey .Values.nginxIngressController.source "helm" }}
+    {{- if .Values.nginxIngressController.source.helm }}
     helm:
       values: |
 {{ .Values.nginxIngressController.source.helm.values | indent 8 }}
@@ -23,4 +23,5 @@ spec:
   {{- if and .Values.nginxIngressController.syncPolicy (not (empty .Values.nginxIngressController.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.nginxIngressController.syncPolicy | indent 4 }}
+  {{- end }}
 {{- end }}

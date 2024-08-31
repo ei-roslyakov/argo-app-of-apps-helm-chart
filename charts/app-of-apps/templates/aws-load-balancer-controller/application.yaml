@@ -15,7 +15,7 @@ spec:
     repoURL: {{ .Values.awsLoadBalancerController.source.repoURL }}
     targetRevision: {{ .Values.awsLoadBalancerController.source.targetRevision }}
     chart: {{ .Values.awsLoadBalancerController.source.chart }}
-    {{- if hasKey .Values.awsLoadBalancerController.source "helm" }}
+    {{- if .Values.awsLoadBalancerController.source.helm }}
     helm:
       values: |
 {{ .Values.awsLoadBalancerController.source.helm.values | indent 8 }}
@@ -23,4 +23,5 @@ spec:
   {{- if and .Values.awsLoadBalancerController.syncPolicy (not (empty .Values.awsLoadBalancerController.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.awsLoadBalancerController.syncPolicy | indent 4 }}
+  {{- end }}
 {{- end }}
