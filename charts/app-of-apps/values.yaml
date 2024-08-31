@@ -1,0 +1,22 @@
+namePrefix: "myapp-"
+nameSuffix: "-qa"
+
+metricsServer:
+  enabled: true
+  name: metrics-server
+  namespace: argocd
+  project: infrastructure
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  source:
+    repoURL: "https://kubernetes-sigs.github.io/metrics-server/"
+    targetRevision: "3.11.0"
+    chart: metrics-server
+  helm:
+    values: |
+      replicas: 2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

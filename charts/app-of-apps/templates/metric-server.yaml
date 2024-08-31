@@ -1,0 +1,25 @@
+{{- if .Values.metricsServer.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.metricsServer.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.metricsServer.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.metricsServer.project }}
+  destination:
+    server: {{ .Values.metricsServer.destination.server }}
+    namespace: {{ .Values.metricsServer.destination.namespace }}
+  source:
+    repoURL: {{ .Values.metricsServer.source.repoURL }}
+    targetRevision: {{ .Values.metricsServer.source.targetRevision }}
+    chart: {{ .Values.metricsServer.source.chart }}
+  helm:
+    values: |
+{{ .Values.metricsServer.helm.values | indent 6 }}
+  syncPolicy:
+    automated:
+      prune: {{ .Values.metricsServer.syncPolicy.automated.prune }}
+      selfHeal: {{ .Values.metricsServer.syncPolicy.automated.selfHeal }}
+{{- end }}
