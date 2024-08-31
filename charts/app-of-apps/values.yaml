@@ -13,10 +13,6 @@ metricsServer:
     repoURL: "https://kubernetes-sigs.github.io/metrics-server/"
     targetRevision: "3.11.0"
     chart: metrics-server
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
 
 awsLoadBalancerController:
   enabled: false
@@ -30,10 +26,6 @@ awsLoadBalancerController:
     repoURL: "https://aws.github.io/eks-charts"
     targetRevision: 1.6.2
     chart: aws-load-balancer-controller
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
 
   ingresses:
 
@@ -97,7 +89,3 @@ nginxIngressController:
             runAsGroup: 65534
             seccompProfile:
               type: RuntimeDefault
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
