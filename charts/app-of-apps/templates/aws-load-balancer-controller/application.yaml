@@ -20,8 +20,7 @@ spec:
       values: |
 {{ .Values.awsLoadBalancerController.source.helm.values | indent 8 }}
     {{- end }}
+  {{- if and .Values.awsLoadBalancerController.syncPolicy (not (empty .Values.awsLoadBalancerController.syncPolicy)) }}
   syncPolicy:
-    automated:
-      prune: {{ .Values.awsLoadBalancerController.syncPolicy.automated.prune }}
-      selfHeal: {{ .Values.awsLoadBalancerController.syncPolicy.automated.selfHeal }}
+{{ toYaml .Values.awsLoadBalancerController.syncPolicy | indent 4 }}
 {{- end }}

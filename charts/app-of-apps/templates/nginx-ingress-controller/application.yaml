@@ -20,8 +20,7 @@ spec:
       values: |
 {{ .Values.nginxIngressController.source.helm.values | indent 8 }}
     {{- end }}
+  {{- if and .Values.nginxIngressController.syncPolicy (not (empty .Values.nginxIngressController.syncPolicy)) }}
   syncPolicy:
-    automated:
-      prune: {{ .Values.nginxIngressController.syncPolicy.automated.prune }}
-      selfHeal: {{ .Values.nginxIngressController.syncPolicy.automated.selfHeal }}
+{{ toYaml .Values.nginxIngressController.syncPolicy | indent 4 }}
 {{- end }}

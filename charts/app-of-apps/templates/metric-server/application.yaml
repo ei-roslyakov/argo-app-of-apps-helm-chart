@@ -20,8 +20,8 @@ spec:
       values: |
 {{ .Values.metricsServer.source.helm.values | indent 8 }}
     {{- end }}
+  {{- if and .Values.metricsServer.syncPolicy (not (empty .Values.metricsServer.syncPolicy)) }}
   syncPolicy:
-    automated:
-      prune: {{ .Values.metricsServer.syncPolicy.automated.prune }}
-      selfHeal: {{ .Values.metricsServer.syncPolicy.automated.selfHeal }}
+{{ toYaml .Values.metricsServer.syncPolicy | indent 4 }}
+  {{- end }}
 {{- end }}
