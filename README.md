@@ -84,17 +84,14 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
-    path: ""
-    repoURL: "https://helm.roslyakov.net/store/"
-    targetRevision: 1.0.3
-    chart: app-of-apps
+    repoURL: "git@github.com:Configure8inc/argo-app-of-apps.git" # Replace with your Git repo URL
+    targetRevision: main  # Specify the branch, tag, or commit hash
+    path: "charts/app-of-apps"
     helm:
-      values: |
-        ########Global values########
+      valuesObject:
         namePrefix: "myapp-"
         nameSuffix: "-use2"
 
-        ########Metrics Server########
         metricsServer:
           enabled: true
           name: metrics-server
@@ -112,7 +109,6 @@ spec:
               prune: true
               selfHeal: true
 
-        ########AWS Load Balancer Controller########
         awsLoadBalancerController:
           enabled: true
           name: "aws-load-balancer-controller"
@@ -140,7 +136,7 @@ spec:
                   create: true
                   name: myapp-use2-aws-load-balancer-controller
                   annotations:
-                    eks.amazonaws.com/role-arn: arn:aws:iam::120569638418:role/myapp-prod-aws-load-balancer-controller
+                    eks.amazonaws.com/role-arn: arn:aws:iam::123456789101:role/myapp-prod-aws-load-balancer-controller
 
                 resources:
                   limits:
@@ -163,7 +159,7 @@ spec:
                 alb.ingress.kubernetes.io/group.name: myapp-external-use2
                 alb.ingress.kubernetes.io/load-balancer-name: myapp-external-use2
                 alb.ingress.kubernetes.io/tags: business_unit=myapp,team=DevOps,owner=configure8,ManagedBy=Argo,application=c8
-                alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:120569638418:certificate/19009c7e-eab5-4e18-8aa8-5c367a92276c
+                alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:123456789101:certificate/19009c7e-eab5-4e18-8aa8-5c367a92276c
                 alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
                 alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
                 alb.ingress.kubernetes.io/healthcheck-path: /healthz
@@ -207,7 +203,7 @@ spec:
                 alb.ingress.kubernetes.io/group.name: myapp-internal-use2
                 alb.ingress.kubernetes.io/load-balancer-name: myapp-internal-use2
                 alb.ingress.kubernetes.io/tags: business_unit=myapp,team=DevOps,owner=configure8,ManagedBy=Argo,application=c8
-                alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:120569638418:certificate/19009c7e-eab5-4e18-8aa8-5c367a92276c
+                alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:123456789101:certificate/19009c7e-eab5-4e18-8aa8-5c367a92276c
                 alb.ingress.kubernetes.io/inbound-cidrs: 10.100.0.0/20
                 alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
                 alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
@@ -241,7 +237,6 @@ spec:
               prune: true
               selfHeal: true
 
-        ########Nginx Ingress Controller########
         nginxIngressController:
           enabled: true
           name: "nginx-ingress"
@@ -309,7 +304,6 @@ spec:
             syncOptions:
               - CreateNamespace=true
 
-        ########Cluster Autoscaler########
         clusterAutoscaler:
           enabled: true
           name: "cluster-autoscaler"
@@ -337,7 +331,7 @@ spec:
                   serviceAccount:
                     name: myapp-use2-cluster-autoscaler
                     annotations: 
-                      eks.amazonaws.com/role-arn: "arn:aws:iam::120569638418:role/c8-myapp-prod-cluster-autoscaler-role"
+                      eks.amazonaws.com/role-arn: "arn:aws:iam::123456789101:role/c8-myapp-prod-cluster-autoscaler-role"
                 nodeSelector:
                   C8App: "C8App"
           syncPolicy:
@@ -345,19 +339,6 @@ spec:
               prune: true
               selfHeal: true
 
-        clusterAutoscaler:
-          enabled: true
-          name: "cluster-autoscaler"
-          namespace: myapp-use2-argocd
-          project: myapp-use2-infrastructure
-          source:
-            repoURL: "https://kubernetes.github.io/autoscaler"
-            targetRevision: 9.37.0
-            chart: cluster-autoscaler
-          syncPolicy:
-            automated:
-              prune: true
-              selfHeal: true
         awsNodeTerminationHandler:
           enabled: true
           name: "aws-node-termination-handler"
@@ -391,7 +372,7 @@ spec:
                     create: true
                     name: myapp-use2-efs
                     annotations:
-                      eks.amazonaws.com/role-arn: arn:aws:iam::120569638418:role/c8-myapp-prod-efs-role
+                      eks.amazonaws.com/role-arn: arn:aws:iam::123456789101:role/c8-myapp-prod-efs-role
                   resources:
                     limits:
                       cpu: 200m
@@ -425,4 +406,6 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    
+
 ```

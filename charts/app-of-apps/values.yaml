@@ -14,6 +14,7 @@ metricsServer:
     targetRevision: "3.11.0"
     chart: metrics-server
     source:
+      path:
       repoURL: "https://kubernetes.github.io/autoscaler"
       targetRevision: 9.37.0
       chart: cluster-autoscaler
@@ -27,6 +28,7 @@ clusterAutoscaler:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
+    path:
     repoURL: "https://kubernetes.github.io/autoscaler"
     targetRevision: 9.37.0
     chart: cluster-autoscaler
@@ -40,6 +42,7 @@ awsNodeTerminationHandler:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
+    path:
     repoURL: "https://aws.github.io/eks-charts"
     chart: aws-node-termination-handler
     targetRevision: 0.21.0
@@ -53,12 +56,13 @@ awsEfsCsiDriver:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
+    path:
     repoURL: "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
     targetRevision: 3.0.8
     chart: aws-efs-csi-driver
 
 awsLoadBalancerController:
-  enabled: false
+  enabled: true
   name: "aws-load-balancer-controller"
   namespace: 
   project: 
@@ -66,6 +70,7 @@ awsLoadBalancerController:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
+    path:
     repoURL: "https://aws.github.io/eks-charts"
     targetRevision: 1.6.2
     chart: aws-load-balancer-controller
@@ -81,6 +86,7 @@ nginxIngressController:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
+    path:
     repoURL: "https://kubernetes.github.io/ingress-nginx"
     targetRevision: 4.11.2
     chart: ingress-nginx

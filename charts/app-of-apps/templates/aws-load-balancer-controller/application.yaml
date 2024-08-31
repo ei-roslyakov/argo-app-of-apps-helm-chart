@@ -12,13 +12,13 @@ spec:
     server: {{ .Values.awsLoadBalancerController.destination.server }}
     namespace: {{ .Values.awsLoadBalancerController.destination.namespace }}
   source:
+    path: {{ .Values.awsLoadBalancerController.source.path }}
     repoURL: {{ .Values.awsLoadBalancerController.source.repoURL }}
     targetRevision: {{ .Values.awsLoadBalancerController.source.targetRevision }}
     chart: {{ .Values.awsLoadBalancerController.source.chart }}
-    {{- if .Values.awsLoadBalancerController.source.helm }}
+    {{- if and .Values.awsLoadBalancerController.source.helm (not (empty .Values.awsLoadBalancerController.source.helm.valuesObject)) }}
     helm:
-      values: |
-{{ .Values.awsLoadBalancerController.source.helm.values | indent 8 }}
+      valuesObject: {{ toYaml .Values.awsLoadBalancerController.source.helm.valuesObject | nindent 8 }}
     {{- end }}
   {{- if and .Values.awsLoadBalancerController.syncPolicy (not (empty .Values.awsLoadBalancerController.syncPolicy)) }}
   syncPolicy:

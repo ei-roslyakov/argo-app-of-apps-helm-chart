@@ -12,13 +12,13 @@ spec:
     server: {{ .Values.nginxIngressController.destination.server }}
     namespace: {{ .Values.nginxIngressController.destination.namespace }}
   source:
+    path: {{ .Values.nginxIngressController.source.path }}
     repoURL: {{ .Values.nginxIngressController.source.repoURL }}
     targetRevision: {{ .Values.nginxIngressController.source.targetRevision }}
     chart: {{ .Values.nginxIngressController.source.chart }}
-    {{- if .Values.nginxIngressController.source.helm }}
+    {{- if and .Values.nginxIngressController.source.helm (not (empty .Values.nginxIngressController.source.helm.valuesObject)) }}
     helm:
-      values: |
-{{ .Values.nginxIngressController.source.helm.values | indent 8 }}
+      valuesObject: {{ toYaml .Values.nginxIngressController.source.helm.valuesObject | nindent 8 }}
     {{- end }}
   {{- if and .Values.nginxIngressController.syncPolicy (not (empty .Values.nginxIngressController.syncPolicy)) }}
   syncPolicy:

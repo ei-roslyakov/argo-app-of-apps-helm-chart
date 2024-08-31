@@ -12,17 +12,16 @@ spec:
     server: {{ .Values.awsNodeTerminationHandler.destination.server }}
     namespace: {{ .Values.awsNodeTerminationHandler.destination.namespace }}
   source:
+    path: {{ .Values.awsNodeTerminationHandler.source.path }}
     repoURL: {{ .Values.awsNodeTerminationHandler.source.repoURL }}
     targetRevision: {{ .Values.awsNodeTerminationHandler.source.targetRevision }}
     chart: {{ .Values.awsNodeTerminationHandler.source.chart }}
-    {{- if .Values.awsNodeTerminationHandler.source.helm }}
+    {{- if and .Values.awsNodeTerminationHandler.source.helm (not (empty .Values.awsNodeTerminationHandler.source.helm.valuesObject)) }}
     helm:
-      values: |
-{{ .Values.awsNodeTerminationHandler.source.helm.values | indent 8 }}
+      valuesObject: {{ toYaml .Values.awsNodeTerminationHandler.source.helm.valuesObject | nindent 8 }}
     {{- end }}
   {{- if and .Values.awsNodeTerminationHandler.syncPolicy (not (empty .Values.awsNodeTerminationHandler.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.awsNodeTerminationHandler.syncPolicy | indent 4 }}
   {{- end }}
 {{- end }}
-

@@ -12,13 +12,13 @@ spec:
     server: {{ .Values.metricsServer.destination.server }}
     namespace: {{ .Values.metricsServer.destination.namespace }}
   source:
+    path: {{ .Values.metricsServer.source.path }}
     repoURL: {{ .Values.metricsServer.source.repoURL }}
     targetRevision: {{ .Values.metricsServer.source.targetRevision }}
     chart: {{ .Values.metricsServer.source.chart }}
-    {{- if .Values.metricsServer.source.helm }}
+    {{- if and .Values.metricsServer.source.helm (not (empty .Values.metricsServer.source.helm.valuesObject)) }}
     helm:
-      values: |
-{{ .Values.metricsServer.source.helm.values | indent 8 }}
+      valuesObject: {{ toYaml .Values.metricsServer.source.helm.valuesObject | nindent 8 }}
     {{- end }}
   {{- if and .Values.metricsServer.syncPolicy (not (empty .Values.metricsServer.syncPolicy)) }}
   syncPolicy:

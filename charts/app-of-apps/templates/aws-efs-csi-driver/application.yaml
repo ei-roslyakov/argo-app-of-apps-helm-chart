@@ -12,13 +12,13 @@ spec:
     server: {{ .Values.awsEfsCsiDriver.destination.server }}
     namespace: {{ .Values.awsEfsCsiDriver.destination.namespace }}
   source:
+    path: {{ .Values.awsEfsCsiDriver.source.path }}
     repoURL: {{ .Values.awsEfsCsiDriver.source.repoURL }}
     targetRevision: {{ .Values.awsEfsCsiDriver.source.targetRevision }}
     chart: {{ .Values.awsEfsCsiDriver.source.chart }}
-    {{- if .Values.awsEfsCsiDriver.source.helm }}
+    {{- if and .Values.awsEfsCsiDriver.source.helm (not (empty .Values.awsEfsCsiDriver.source.helm.valuesObject)) }}
     helm:
-      values: |
-{{ .Values.awsEfsCsiDriver.source.helm.values | indent 8 }}
+      valuesObject: {{ toYaml .Values.awsEfsCsiDriver.source.helm.valuesObject | nindent 8 }}
     {{- end }}
   {{- if and .Values.awsEfsCsiDriver.syncPolicy (not (empty .Values.awsEfsCsiDriver.syncPolicy)) }}
   syncPolicy:
