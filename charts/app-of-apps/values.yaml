@@ -1,11 +1,11 @@
-namePrefix: "myapp-"
-nameSuffix: "-qa"
+namePrefix: "yahoo-"
+nameSuffix: "-use2"
 
 metricsServer:
   enabled: true
-  name: metrics-server
-  namespace: argocd
-  project: infrastructure
+  name: "metrics-server"
+  namespace: yahoo-use2-argocd
+  project: yahoo-use2-infrastructure
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -13,8 +13,6 @@ metricsServer:
     repoURL: "https://kubernetes-sigs.github.io/metrics-server/"
     targetRevision: "3.11.0"
     chart: metrics-server
-  envs:
-    replicas: 1
   syncPolicy:
     automated:
       prune: true

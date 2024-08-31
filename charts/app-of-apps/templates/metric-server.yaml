@@ -15,10 +15,11 @@ spec:
     repoURL: {{ .Values.metricsServer.source.repoURL }}
     targetRevision: {{ .Values.metricsServer.source.targetRevision }}
     chart: {{ .Values.metricsServer.source.chart }}
-  helm:
-    values: |
-      placeholder: "values"
-{{ .Values.metricsServer.helm.values | indent 6 }}
+    {{- if hasKey .Values.metricsServer.source "helm" }}
+    helm:
+      values: |
+{{ .Values.metricsServer.source.helm.values | indent 8 }}
+    {{- end }}
   syncPolicy:
     automated:
       prune: {{ .Values.metricsServer.syncPolicy.automated.prune }}
