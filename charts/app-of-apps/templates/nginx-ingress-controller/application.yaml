@@ -1,0 +1,27 @@
+{{- if .Values.nginxIngressController.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.nginxIngressController.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.nginxIngressController.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.nginxIngressController.project }}
+  destination:
+    server: {{ .Values.nginxIngressController.destination.server }}
+    namespace: {{ .Values.nginxIngressController.destination.namespace }}
+  source:
+    repoURL: {{ .Values.nginxIngressController.source.repoURL }}
+    targetRevision: {{ .Values.nginxIngressController.source.targetRevision }}
+    chart: {{ .Values.nginxIngressController.source.chart }}
+    {{- if hasKey .Values.nginxIngressController.source "helm" }}
+    helm:
+      values: |
+{{ .Values.nginxIngressController.source.helm.values | indent 8 }}
+    {{- end }}
+  syncPolicy:
+    automated:
+      prune: {{ .Values.nginxIngressController.syncPolicy.automated.prune }}
+      selfHeal: {{ .Values.nginxIngressController.syncPolicy.automated.selfHeal }}
+{{- end }}
