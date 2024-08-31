@@ -84,7 +84,7 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
-    repoURL: "git@github.com:Configure8inc/argo-app-of-apps.git" # Replace with your Git repo URL
+    repoURL: "git@github.com:GitHubOrg/argo-app-of-apps.git" # Replace with your Git repo URL
     targetRevision: main  # Specify the branch, tag, or commit hash
     path: "charts/app-of-apps"
     helm:
