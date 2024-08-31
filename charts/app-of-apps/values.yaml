@@ -26,6 +26,23 @@ clusterAutoscaler:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
+  source:
+    repoURL: "https://aws.github.io/eks-charts"
+    chart: aws-node-termination-handler
+    targetRevision: 0.21.0
+
+awsNodeTerminationHandler:
+  enabled: false
+  name: "aws-node-termination-handler"
+  namespace: yahoo-use2-argocd
+  project: yahoo-use2-infrastructure
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  source:
+    repoURL: "https://aws.github.io/eks-charts"
+    targetRevision: 0.10.0
+    chart: aws-node-termination-handler
 
 awsLoadBalancerController:
   enabled: false

@@ -1,0 +1,28 @@
+{{- if .Values.awsNodeTerminationHandler.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.awsNodeTerminationHandler.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.awsNodeTerminationHandler.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.awsNodeTerminationHandler.project }}
+  destination:
+    server: {{ .Values.awsNodeTerminationHandler.destination.server }}
+    namespace: {{ .Values.awsNodeTerminationHandler.destination.namespace }}
+  source:
+    repoURL: {{ .Values.awsNodeTerminationHandler.source.repoURL }}
+    targetRevision: {{ .Values.awsNodeTerminationHandler.source.targetRevision }}
+    chart: {{ .Values.awsNodeTerminationHandler.source.chart }}
+    {{- if .Values.awsNodeTerminationHandler.source.helm }}
+    helm:
+      values: |
+{{ .Values.awsNodeTerminationHandler.source.helm.values | indent 8 }}
+    {{- end }}
+  {{- if and .Values.awsNodeTerminationHandler.syncPolicy (not (empty .Values.awsNodeTerminationHandler.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.awsNodeTerminationHandler.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}
+
