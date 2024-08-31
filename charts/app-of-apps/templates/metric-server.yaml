@@ -16,10 +16,8 @@ spec:
     targetRevision: {{ .Values.metricsServer.source.targetRevision }}
     chart: {{ .Values.metricsServer.source.chart }}
   helm:
-    {{- if hasKey .Values.metricsServer.helm "values" }}
     values: |
 {{ .Values.metricsServer.helm.values | indent 6 }}
-    {{- end }}
   syncPolicy:
     automated:
       prune: {{ .Values.metricsServer.syncPolicy.automated.prune }}
