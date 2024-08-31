@@ -1,0 +1,27 @@
+{{- if .Values.awsLoadBalancerController.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.awsLoadBalancerController.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.awsLoadBalancerController.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.awsLoadBalancerController.project }}
+  destination:
+    server: {{ .Values.awsLoadBalancerController.destination.server }}
+    namespace: {{ .Values.awsLoadBalancerController.destination.namespace }}
+  source:
+    repoURL: {{ .Values.awsLoadBalancerController.source.repoURL }}
+    targetRevision: {{ .Values.awsLoadBalancerController.source.targetRevision }}
+    chart: {{ .Values.awsLoadBalancerController.source.chart }}
+    {{- if hasKey .Values.awsLoadBalancerController.source "helm" }}
+    helm:
+      values: |
+{{ .Values.awsLoadBalancerController.source.helm.values | indent 8 }}
+    {{- end }}
+  syncPolicy:
+    automated:
+      prune: {{ .Values.awsLoadBalancerController.syncPolicy.automated.prune }}
+      selfHeal: {{ .Values.awsLoadBalancerController.syncPolicy.automated.selfHeal }}
+{{- end }}

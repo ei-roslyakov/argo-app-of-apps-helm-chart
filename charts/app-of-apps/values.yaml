@@ -17,3 +17,20 @@ metricsServer:
     automated:
       prune: true
       selfHeal: true
+
+awsLoadBalancerController:
+  enabled: true
+  name: "aws-load-balancer-controller"
+  namespace: yahoo-use2-argocd
+  project: yahoo-use2-infrastructure
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  source:
+    repoURL: "https://aws.github.io/eks-charts"
+    targetRevision: 1.6.2
+    chart: aws-load-balancer-controller
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
