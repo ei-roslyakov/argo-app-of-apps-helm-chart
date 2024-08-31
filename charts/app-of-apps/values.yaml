@@ -1,11 +1,11 @@
-namePrefix: "yahoo-"
+namePrefix: "myapp-"
 nameSuffix: "-use2"
 
 metricsServer:
   enabled: false
   name: "metrics-server"
-  namespace: yahoo-use2-argocd
-  project: yahoo-use2-infrastructure
+  namespace: 
+  project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -21,8 +21,8 @@ metricsServer:
 clusterAutoscaler:
   enabled: false
   name: "cluster-autoscaler"
-  namespace: yahoo-use2-argocd
-  project: yahoo-use2-infrastructure
+  namespace: 
+  project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -34,8 +34,8 @@ clusterAutoscaler:
 awsNodeTerminationHandler:
   enabled: false
   name: "aws-node-termination-handler"
-  namespace: yahoo-use2-argocd
-  project: yahoo-use2-infrastructure
+  namespace: 
+  project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -47,8 +47,8 @@ awsNodeTerminationHandler:
 awsEfsCsiDriver:
   enabled: false
   name: "aws-efs-csi-driver"
-  namespace: yahoo-use2-argocd
-  project: yahoo-use2-infrastructure
+  namespace: 
+  project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -60,8 +60,8 @@ awsEfsCsiDriver:
 awsLoadBalancerController:
   enabled: false
   name: "aws-load-balancer-controller"
-  namespace: yahoo-use2-argocd
-  project: yahoo-use2-infrastructure
+  namespace: 
+  project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -75,8 +75,8 @@ awsLoadBalancerController:
 nginxIngressController:
   enabled: false
   name: "nginx-ingress"
-  namespace: yahoo-argocd-use2
-  project: yahoo-use2-infrastructure
+  namespace: 
+  project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
@@ -84,51 +84,3 @@ nginxIngressController:
     repoURL: "https://kubernetes.github.io/ingress-nginx"
     targetRevision: 4.11.2
     chart: ingress-nginx
-    helm:
-      values: |
-        controller:
-          resources:
-            limits:
-              cpu: 200m
-              memory: 384Mi
-            requests:
-              cpu: 50m
-              memory: 384Mi
-          ingressClassResource:
-            name: yahoo-use2-ingress-nginx
-            enabled: true
-          ingressClassByName: true
-          publishService:
-            enabled: true
-          service:
-            type: NodePort
-            nodePorts:
-              http: 32080
-              https: 32443
-            annotations:
-              service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-              service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
-          config:
-            use-forwarded-headers: "true"
-            use-gzip: true
-
-          kind: Deployment
-          replicaCount: 2
-
-          nodeSelector:
-            C8App: "C8App"
-
-          updateStrategy:
-            type: RollingUpdate
-            rollingUpdate:
-              maxUnavailable: 0
-
-          podSecurityContext:
-            runAsUser: 101
-            runAsGroup: 82
-
-          podSecurityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
-            seccompProfile:
-              type: RuntimeDefault
