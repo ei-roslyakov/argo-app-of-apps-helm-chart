@@ -17,7 +17,8 @@ spec:
     chart: {{ .Values.metricsServer.source.chart }}
   helm:
     values: |
-      replicas: {{ .Values.metricsServer.envs.replicas }}
+      placeholder: "values"
+{{ .Values.metricsServer.helm.values | indent 6 }}
   syncPolicy:
     automated:
       prune: {{ .Values.metricsServer.syncPolicy.automated.prune }}
