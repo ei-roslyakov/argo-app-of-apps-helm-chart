@@ -1,0 +1,27 @@
+{{- if .Values.awsEfsCsiDriver.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.awsEfsCsiDriver.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.awsEfsCsiDriver.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.awsEfsCsiDriver.project }}
+  destination:
+    server: {{ .Values.awsEfsCsiDriver.destination.server }}
+    namespace: {{ .Values.awsEfsCsiDriver.destination.namespace }}
+  source:
+    repoURL: {{ .Values.awsEfsCsiDriver.source.repoURL }}
+    targetRevision: {{ .Values.awsEfsCsiDriver.source.targetRevision }}
+    chart: {{ .Values.awsEfsCsiDriver.source.chart }}
+    {{- if .Values.awsEfsCsiDriver.source.helm }}
+    helm:
+      values: |
+{{ .Values.awsEfsCsiDriver.source.helm.values | indent 8 }}
+    {{- end }}
+  {{- if and .Values.awsEfsCsiDriver.syncPolicy (not (empty .Values.awsEfsCsiDriver.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.awsEfsCsiDriver.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -27,9 +27,9 @@ clusterAutoscaler:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   source:
-    repoURL: "https://aws.github.io/eks-charts"
-    chart: aws-node-termination-handler
-    targetRevision: 0.21.0
+    repoURL: "https://kubernetes.github.io/autoscaler"
+    targetRevision: 9.37.0
+    chart: cluster-autoscaler
 
 awsNodeTerminationHandler:
   enabled: false
@@ -41,8 +41,21 @@ awsNodeTerminationHandler:
     namespace: kube-system
   source:
     repoURL: "https://aws.github.io/eks-charts"
-    targetRevision: 0.10.0
     chart: aws-node-termination-handler
+    targetRevision: 0.21.0
+
+awsEfsCsiDriver:
+  enabled: false
+  name: "aws-efs-csi-driver"
+  namespace: yahoo-use2-argocd
+  project: yahoo-use2-infrastructure
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  source:
+    repoURL: "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
+    targetRevision: 3.0.8
+    chart: aws-efs-csi-driver
 
 awsLoadBalancerController:
   enabled: false

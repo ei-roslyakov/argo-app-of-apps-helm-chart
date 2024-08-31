@@ -3,7 +3,16 @@ entries:
   app-of-apps:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-08-31T15:37:29.283291+02:00"
+    created: "2024-08-31T15:54:49.59857+02:00"
+    description: A Helm chart for deploying Argo CD applications
+    digest: 145a6f0cb4a9740f1fc84a237dcfd48aff59b0b67abaa8f06fe0cf02ab35dfef
+    name: app-of-apps
+    urls:
+    - https://helm.roslyakov.net/store/app-of-apps-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-08-31T15:54:49.598177+02:00"
     description: A Helm chart for deploying Argo CD applications
     digest: 5a70a3fdac2eab3365661cc491a54dbeb949e7b09e3e87e97c7c2541ca89b57e
     name: app-of-apps
@@ -12,11 +21,11 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-08-31T15:37:29.280276+02:00"
+    created: "2024-08-31T15:54:49.597667+02:00"
     description: A Helm chart for deploying Argo CD applications
     digest: e408fba1fc8465a98c3341adeb85981232ee35a962b5cbc11271309dece5ae18
     name: app-of-apps
     urls:
     - https://helm.roslyakov.net/store/app-of-apps-0.0.1.tgz
     version: 0.0.1
-generated: "2024-08-31T15:37:29.279377+02:00"
+generated: "2024-08-31T15:54:49.596987+02:00"
