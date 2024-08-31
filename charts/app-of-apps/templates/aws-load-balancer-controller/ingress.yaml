@@ -1,29 +1,31 @@
 {{- if and .Values.awsLoadBalancerController.enabled .Values.awsLoadBalancerController.ingresses }}
-{{- range .Values.awsLoadBalancerController.ingresses }}
+{{- range $index, $ingress := .Values.awsLoadBalancerController.ingresses }}
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $.Values.namePrefix | default "" }}{{ .name }}{{ $.Values.nameSuffix | default "" }}
-  namespace: {{ .namespace }}
+  name: {{ $.Values.namePrefix | default "" }}{{ $ingress.name }}{{ $.Values.nameSuffix | default "" }}
+  namespace: {{ $ingress.namespace }}
   annotations:
-    {{- range $key, $value := .annotations }}
+    {{- range $key, $value := $ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
   ingressClassName: alb
   rules:
-    {{- range .rules }}
+    {{- range $rule := $ingress.rules }}
     - http:
         paths:
-          {{- range .http.paths }}
-          - pathType: {{ .pathType }}
-            path: {{ .path }}
+          {{- range $path := $rule.http.paths }}
+          - pathType: {{ $path.pathType }}
+            path: {{ $path.path }}
             backend:
               service:
-                name: {{ .backend.service.name }}
+                name: {{ $path.backend.service.name }}
                 port:
-                  name: {{ .backend.service.port.name }}
+                  name: {{ $path.backend.service.port.name }}
           {{- end }}
     {{- end }}
 {{- end }}
 {{- end }}
+
