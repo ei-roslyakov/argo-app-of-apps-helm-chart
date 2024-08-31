@@ -13,6 +13,19 @@ metricsServer:
     repoURL: "https://kubernetes-sigs.github.io/metrics-server/"
     targetRevision: "3.11.0"
     chart: metrics-server
+    source:
+      repoURL: "https://kubernetes.github.io/autoscaler"
+      targetRevision: 9.37.0
+      chart: cluster-autoscaler
+
+clusterAutoscaler:
+  enabled: false
+  name: "cluster-autoscaler"
+  namespace: yahoo-use2-argocd
+  project: yahoo-use2-infrastructure
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
 
 awsLoadBalancerController:
   enabled: false

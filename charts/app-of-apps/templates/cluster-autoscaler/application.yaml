@@ -1,0 +1,27 @@
+{{- if .Values.clusterAutoscaler.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.clusterAutoscaler.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.clusterAutoscaler.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.clusterAutoscaler.project }}
+  destination:
+    server: {{ .Values.clusterAutoscaler.destination.server }}
+    namespace: {{ .Values.clusterAutoscaler.destination.namespace }}
+  source:
+    repoURL: {{ .Values.clusterAutoscaler.source.repoURL }}
+    targetRevision: {{ .Values.clusterAutoscaler.source.targetRevision }}
+    chart: {{ .Values.clusterAutoscaler.source.chart }}
+    {{- if .Values.clusterAutoscaler.source.helm }}
+    helm:
+      values: |
+{{ .Values.clusterAutoscaler.source.helm.values | indent 8 }}
+    {{- end }}
+  {{- if and .Values.clusterAutoscaler.syncPolicy (not (empty .Values.clusterAutoscaler.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.clusterAutoscaler.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}
