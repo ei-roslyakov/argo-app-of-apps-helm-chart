@@ -1,0 +1,29 @@
+{{- if .Values.redis.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.redis.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.redis.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: {{ .Values.redis.project }}
+  destination:
+    server: {{ .Values.redis.destination.server }}
+    namespace: {{ .Values.redis.destination.namespace }}
+  source:
+    path: {{ .Values.redis.source.path }}
+    repoURL: {{ .Values.redis.source.repoURL }}
+    targetRevision: {{ .Values.redis.source.targetRevision }}
+    chart: {{ .Values.redis.source.chart }}
+    {{- if and .Values.redis.source.helm (not (empty .Values.redis.source.helm.valuesObject)) }}
+    helm:
+      valuesObject: {{ toYaml .Values.redis.source.helm.valuesObject | nindent 8 }}
+    {{- end }}
+  {{- if and .Values.redis.syncPolicy (not (empty .Values.redis.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.redis.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}

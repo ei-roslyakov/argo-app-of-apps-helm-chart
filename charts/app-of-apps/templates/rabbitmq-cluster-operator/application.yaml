@@ -1,0 +1,29 @@
+{{- if .Values.rabbitmqClusterOperator.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.rabbitmqClusterOperator.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.rabbitmqClusterOperator.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: {{ .Values.rabbitmqClusterOperator.project }}
+  destination:
+    server: {{ .Values.rabbitmqClusterOperator.destination.server }}
+    namespace: {{ .Values.rabbitmqClusterOperator.destination.namespace }}
+  source:
+    path: {{ .Values.rabbitmqClusterOperator.source.path }}
+    repoURL: {{ .Values.rabbitmqClusterOperator.source.repoURL }}
+    targetRevision: {{ .Values.rabbitmqClusterOperator.source.targetRevision }}
+    chart: {{ .Values.rabbitmqClusterOperator.source.chart }}
+    {{- if and .Values.rabbitmqClusterOperator.source.helm (not (empty .Values.rabbitmqClusterOperator.source.helm.valuesObject)) }}
+    helm:
+      valuesObject: {{ toYaml .Values.rabbitmqClusterOperator.source.helm.valuesObject | nindent 8 }}
+    {{- end }}
+  {{- if and .Values.rabbitmqClusterOperator.syncPolicy (not (empty .Values.rabbitmqClusterOperator.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.rabbitmqClusterOperator.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}

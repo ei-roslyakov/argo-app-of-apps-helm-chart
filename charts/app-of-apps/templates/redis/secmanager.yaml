@@ -1,0 +1,19 @@
+{{- if .Values.redis.awsSecretsManager.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.redis.name }}-secrets-manager{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.redis.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.redis.awsSecretsManager.refreshInterval }}"
+  secretStoreRef:
+    kind: "{{ default "SecretStore" .Values.redis.awsSecretsManager.kind }}"
+    name: "{{ default "aws-secrets-manager" .Values.redis.awsSecretsManager.secretStoreRef }}"
+  target:
+    creationPolicy: Owner
+    name: "{{ .Values.redis.awsSecretsManager.secretName }}"
+  data:
+{{- toYaml .Values.redis.awsSecretsManager.data | nindent 4 }}
+{{- end }}

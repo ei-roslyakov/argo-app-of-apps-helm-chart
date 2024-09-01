@@ -1,0 +1,19 @@
+{{- if .Values.rabbitmqClusterOperator.awsSecretsManager.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.rabbitmqClusterOperator.name }}-secrets-manager{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.rabbitmqClusterOperator.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.rabbitmqClusterOperator.awsSecretsManager.refreshInterval }}"
+  secretStoreRef:
+    kind: "{{ default "SecretStore" .Values.rabbitmqClusterOperator.awsSecretsManager.kind }}"
+    name: "{{ default "aws-secrets-manager" .Values.rabbitmqClusterOperator.awsSecretsManager.secretStoreRef }}"
+  target:
+    creationPolicy: Owner
+    name: "{{ .Values.rabbitmqClusterOperator.awsSecretsManager.secretName }}"
+  data:
+{{- toYaml .Values.rabbitmqClusterOperator.awsSecretsManager.data | nindent 4 }}
+{{- end }}

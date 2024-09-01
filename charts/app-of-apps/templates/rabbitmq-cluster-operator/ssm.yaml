@@ -1,0 +1,20 @@
+{{- if .Values.rabbitmqClusterOperator.awsParameterStore.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.rabbitmqClusterOperator.name }}-parameter-store{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.rabbitmqClusterOperator.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.rabbitmqClusterOperator.awsParameterStore.refreshInterval }}"
+  secretStoreRef:
+    name: "{{ default "aws-parameter-store" .Values.rabbitmqClusterOperator.awsParameterStore.secretStoreRef }}"
+    kind: "{{ default "SecretStore" .Values.rabbitmqClusterOperator.awsParameterStore.kind }}"
+  target:
+    name:  "{{ .Values.rabbitmqClusterOperator.awsParameterStore.secretName }}"
+    creationPolicy: Owner
+    deletionPolicy: {{ .Values.rabbitmqClusterOperator.awsParameterStore.deletionPolicy | default "Delete" }}
+  data:
+{{- toYaml .Values.rabbitmqClusterOperator.awsParameterStore.data | nindent 4 }}
+{{- end }}

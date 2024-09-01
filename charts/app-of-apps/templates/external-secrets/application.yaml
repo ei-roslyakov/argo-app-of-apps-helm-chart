@@ -1,0 +1,29 @@
+{{- if .Values.externalSecrets.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.externalSecrets.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.externalSecrets.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.externalSecrets.project }}
+  destination:
+    server: {{ .Values.externalSecrets.destination.server }}
+    namespace: {{ .Values.externalSecrets.destination.namespace }}
+  source:
+    path: {{ .Values.externalSecrets.source.path }}
+    repoURL: {{ .Values.externalSecrets.source.repoURL }}
+    targetRevision: {{ .Values.externalSecrets.source.targetRevision }}
+    chart: {{ .Values.externalSecrets.source.chart }}
+    {{- if and .Values.externalSecrets.source.helm (not (empty .Values.externalSecrets.source.helm.valuesObject)) }}
+    helm:
+      valuesObject: {{ toYaml .Values.externalSecrets.source.helm.valuesObject | nindent 8 }}
+    {{- end }}
+  {{- if and .Values.externalSecrets.syncPolicy (not (empty .Values.externalSecrets.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.externalSecrets.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,20 @@
+{{- if .Values.redis.awsParameterStore.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.redis.name }}-parameter-store{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.redis.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.redis.awsParameterStore.refreshInterval }}"
+  secretStoreRef:
+    name: "{{ default "aws-parameter-store" .Values.redis.awsParameterStore.secretStoreRef }}"
+    kind: "{{ default "SecretStore" .Values.redis.awsParameterStore.kind }}"
+  target:
+    name:  "{{ .Values.redis.awsParameterStore.secretName }}"
+    creationPolicy: Owner
+    deletionPolicy: {{ .Values.redis.awsParameterStore.deletionPolicy | default "Delete" }}
+  data:
+{{- toYaml .Values.redis.awsParameterStore.data | nindent 4 }}
+{{- end }}

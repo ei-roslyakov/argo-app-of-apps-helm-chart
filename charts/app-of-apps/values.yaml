@@ -18,6 +18,7 @@ metricsServer:
       repoURL: "https://kubernetes.github.io/autoscaler"
       targetRevision: 9.37.0
       chart: cluster-autoscaler
+    helm:
 
 clusterAutoscaler:
   enabled: false
@@ -32,6 +33,7 @@ clusterAutoscaler:
     repoURL: "https://kubernetes.github.io/autoscaler"
     targetRevision: 9.37.0
     chart: cluster-autoscaler
+  helm:
 
 awsNodeTerminationHandler:
   enabled: false
@@ -46,6 +48,7 @@ awsNodeTerminationHandler:
     repoURL: "https://aws.github.io/eks-charts"
     chart: aws-node-termination-handler
     targetRevision: 0.21.0
+  helm:
 
 awsEfsCsiDriver:
   enabled: false
@@ -60,9 +63,10 @@ awsEfsCsiDriver:
     repoURL: "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
     targetRevision: 3.0.8
     chart: aws-efs-csi-driver
+  helm:
 
 awsLoadBalancerController:
-  enabled: true
+  enabled: false
   name: "aws-load-balancer-controller"
   namespace: 
   project: 
@@ -74,7 +78,7 @@ awsLoadBalancerController:
     repoURL: "https://aws.github.io/eks-charts"
     targetRevision: 1.6.2
     chart: aws-load-balancer-controller
-
+  helm:
   ingresses:
 
 nginxIngressController:
@@ -90,3 +94,67 @@ nginxIngressController:
     repoURL: "https://kubernetes.github.io/ingress-nginx"
     targetRevision: 4.11.2
     chart: ingress-nginx
+  helm:
+
+externalSecrets:
+  enabled: false
+  name: "external-secrets"
+  namespace: 
+  project: 
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  source:
+    path:
+    repoURL: "https://charts.external-secrets.io"
+    targetRevision: 0.9.11
+    chart: external-secrets
+  helm:
+  stores:
+
+redis:
+  enabled: true
+  name: "redis"
+  namespace: 
+  project: 
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  source:
+    path:
+    repoURL: registry-1.docker.io/bitnamicharts
+    chart: redis
+    targetRevision: 19.3.2
+  helm:
+  awsSecretsManager:
+    enabled: false
+  awsParameterStore:
+    enabled: false
+    kind: ClusterSecretStore
+    refreshInterval: 12h
+    secretName: secret
+    data:
+      - secretKey: redis-password
+        remoteRef:
+          key: "REDIS_PASSWORD"
+
+
+rabbitmqClusterOperator:
+  enabled: false
+  name: "rabbitmq-cluster-operator"
+  namespace: 
+  project: 
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  source:
+    path:
+    repoURL: "https://charts.bitnami.com/bitnami"
+    chart: "rabbitmq-cluster-operator"
+    targetRevision: 3.13.0
+  helm:
+  awsSecretsManager:
+    enabled: false
+  awsParameterStore:
+    enabled: false
+

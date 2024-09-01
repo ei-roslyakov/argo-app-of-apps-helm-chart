@@ -1,0 +1,8 @@
+{{- if .Values.rabbitmqClusterOperator.enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.rabbitmqClusterOperator.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+{{- end }}
