@@ -11,15 +11,34 @@ spec:
   destination:
     server: {{ .Values.awsNodeTerminationHandler.destination.server }}
     namespace: {{ .Values.awsNodeTerminationHandler.destination.namespace }}
-  source:
-    path: {{ .Values.awsNodeTerminationHandler.source.path }}
-    repoURL: {{ .Values.awsNodeTerminationHandler.source.repoURL }}
-    targetRevision: {{ .Values.awsNodeTerminationHandler.source.targetRevision }}
-    chart: {{ .Values.awsNodeTerminationHandler.source.chart }}
-    {{- if and .Values.awsNodeTerminationHandler.source.helm (not (empty .Values.awsNodeTerminationHandler.source.helm.valuesObject)) }}
-    helm:
-      valuesObject: {{ toYaml .Values.awsNodeTerminationHandler.source.helm.valuesObject | nindent 8 }}
+  sources:
+  {{- range .Values.awsNodeTerminationHandler.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
     {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
   {{- if and .Values.awsNodeTerminationHandler.syncPolicy (not (empty .Values.awsNodeTerminationHandler.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.awsNodeTerminationHandler.syncPolicy | indent 4 }}

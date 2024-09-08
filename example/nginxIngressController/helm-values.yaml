@@ -1,0 +1,42 @@
+controller:
+  resources:
+    limits:
+      cpu: 200m
+      memory: 384Mi
+    requests:
+      cpu: 50m
+      memory: 384Mi
+  ingressClassResource:
+    name: myapp-use2-ingress-nginx
+    enabled: true
+  ingressClassByName: true
+  publishService:
+    enabled: true
+  service:
+    type: NodePort
+    nodePorts:
+      http: 32080
+      https: 32443
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+  config:
+    use-forwarded-headers: "true"
+    use-gzip: true
+
+  kind: Deployment
+  replicaCount: 2
+
+  nodeSelector:
+    C8App: "C8App"
+
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+
+  podSecurityContext:
+    runAsUser: 65534
+    runAsGroup: 65534
+    seccompProfile:
+      type: RuntimeDefault

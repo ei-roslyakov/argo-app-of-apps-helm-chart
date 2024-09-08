@@ -11,15 +11,34 @@ spec:
   destination:
     server: {{ .Values.metricsServer.destination.server }}
     namespace: {{ .Values.metricsServer.destination.namespace }}
-  source:
-    path: {{ .Values.metricsServer.source.path }}
-    repoURL: {{ .Values.metricsServer.source.repoURL }}
-    targetRevision: {{ .Values.metricsServer.source.targetRevision }}
-    chart: {{ .Values.metricsServer.source.chart }}
-    {{- if and .Values.metricsServer.source.helm (not (empty .Values.metricsServer.source.helm.valuesObject)) }}
-    helm:
-      valuesObject: {{ toYaml .Values.metricsServer.source.helm.valuesObject | nindent 8 }}
+  sources:
+  {{- range .Values.metricsServer.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
     {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
   {{- if and .Values.metricsServer.syncPolicy (not (empty .Values.metricsServer.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.metricsServer.syncPolicy | indent 4 }}

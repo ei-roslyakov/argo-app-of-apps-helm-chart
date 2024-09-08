@@ -1,20 +1,18 @@
-{{- if .Values.rabbitmqClusterOperator.enabled }}
+{{- if .Values.lokiStack.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.namePrefix | default "" }}{{ .Values.rabbitmqClusterOperator.name }}{{ .Values.nameSuffix | default "" }}
-  namespace: {{ .Values.rabbitmqClusterOperator.namespace }}
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.lokiStack.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.lokiStack.namespace }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
-  project: {{ .Values.rabbitmqClusterOperator.project }}
+  project: {{ .Values.lokiStack.project }}
   destination:
-    server: {{ .Values.rabbitmqClusterOperator.destination.server }}
-    namespace: {{ .Values.rabbitmqClusterOperator.destination.namespace }}
+    server: {{ .Values.lokiStack.destination.server }}
+    namespace: {{ .Values.lokiStack.destination.namespace }}
   sources:
-  {{- range .Values.rabbitmqClusterOperator.sources }}
+  {{- range .Values.lokiStack.sources }}
   - repoURL: {{ .repoURL }}
     {{- if .targetRevision }}
     targetRevision: {{ .targetRevision }}
@@ -41,8 +39,8 @@ spec:
     ref: {{ .ref }}
     {{- end }}
   {{- end }}
-  {{- if and .Values.rabbitmqClusterOperator.syncPolicy (not (empty .Values.rabbitmqClusterOperator.syncPolicy)) }}
+  {{- if and .Values.lokiStack.syncPolicy (not (empty .Values.lokiStack.syncPolicy)) }}
   syncPolicy:
-{{ toYaml .Values.rabbitmqClusterOperator.syncPolicy | indent 4 }}
+{{ toYaml .Values.lokiStack.syncPolicy | indent 4 }}
   {{- end }}
 {{- end }}

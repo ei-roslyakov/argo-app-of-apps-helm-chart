@@ -1,0 +1,258 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: myapp-use2-apps-with-apps
+  namespace: myapp-use2-argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: myapp-use2-infrastructure
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-system
+  sources:
+    - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+      targetRevision: main
+      ref: values
+    - repoURL: "git@github.com:Configure8inc/argo-app-of-apps.git"
+      targetRevision: main
+      path: "charts/app-of-apps"
+      helm:
+        valueFiles:
+          - $values/projects/infra/awsEfsCsiDriver/app-values.yaml
+          - $values/projects/infra/awsLoadBalancerController/app-values.yaml
+          - $values/projects/infra/clusterAutoscaler/app-values.yaml
+          - $values/projects/infra/externalSecrets/app-values.yaml
+          - $values/projects/infra/lokiStack/app-values.yaml
+          - $values/projects/infra/nginxIngressController/app-values.yaml
+          - $values/projects/infra/rabbitmqClusterOperator/app-values.yaml
+          - $values/projects/infra/redis/app-values.yaml
+        ignoreMissingValueFiles: true
+        valuesObject:
+          namePrefix: "myapp-"
+          nameSuffix: "-use2"
+
+          metricsServer:
+            enabled: true
+            name: metrics-server
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            sources:
+              - repoURL: "https://kubernetes-sigs.github.io/metrics-server/"
+                targetRevision: "3.11.0"
+                chart: metrics-server
+                helm:
+                  valuesObject:
+                    replicas: 1
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+          awsLoadBalancerController:
+            enabled: true
+            name: "aws-load-balancer-controller"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            sources:
+              - repoURL: "https://aws.github.io/eks-charts"
+                targetRevision: 1.6.2
+                chart: aws-load-balancer-controller
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/awsLoadBalancerController/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+          nginxIngressController:
+            enabled: true
+            name: "nginx-ingress"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            destination:
+              server: "https://kubernetes.default.svc"
+              namespace: myapp-ingress-nginx-use2
+            sources:
+              - repoURL: "https://kubernetes.github.io/ingress-nginx"
+                targetRevision: 4.11.2
+                chart: ingress-nginx
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/nginxIngressController/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+              syncOptions:
+                - CreateNamespace=true
+
+          clusterAutoscaler:
+            enabled: true
+            name: "cluster-autoscaler"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            sources:
+              - repoURL: "https://kubernetes.github.io/autoscaler"
+                targetRevision: 9.37.0
+                chart: cluster-autoscaler
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/clusterAutoscaler/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+          awsNodeTerminationHandler:
+            enabled: true
+            name: "aws-node-termination-handler"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            destination:
+              server: "https://kubernetes.default.svc"
+              namespace: kube-system
+            sources:
+              - repoURL: "https://aws.github.io/eks-charts"
+                chart: aws-node-termination-handler
+                targetRevision: 0.21.0
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+          awsEfsCsiDriver:
+            enabled: true
+            name: "aws-efs-csi-driver"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            sources:
+              - repoURL: "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
+                targetRevision: 3.0.8
+                chart: aws-efs-csi-driver
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/awsEfsCsiDriver/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+          externalSecrets:
+            enabled: true
+            name: "external-secrets"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            destination:
+              server: "https://kubernetes.default.svc"
+              namespace: myapp-external-secrets-use2
+            sources:
+              - repoURL: "https://charts.external-secrets.io"
+                targetRevision: 0.9.11
+                chart: external-secrets
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/externalSecrets/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+              syncOptions:
+                - CreateNamespace=true
+
+          redis:
+            enabled: true
+            name: "redis"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            destination:
+              server: "https://kubernetes.default.svc"
+              namespace: myapp-redis-use2
+            sources:
+              - repoURL: registry-1.docker.io/bitnamicharts
+                chart: redis
+                targetRevision: 19.3.2
+                helm:
+                  helm:
+                  valueFiles:
+                    - $values/projects/infra/redis/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+              syncOptions:
+                - CreateNamespace=true
+
+          rabbitmqClusterOperator:
+            enabled: true
+            name: "rabbitmq-cluster-operator"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            destination:
+              server: "https://kubernetes.default.svc"
+              namespace: myapp-rabbitmq-use2
+            sources:
+              - repoURL: "https://charts.bitnami.com/bitnami"
+                chart: "rabbitmq-cluster-operator"
+                targetRevision: 3.13.0
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/rabbitmqClusterOperator/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+              syncOptions:
+                - CreateNamespace=true
+
+          lokiStack:
+            enabled: true
+            name: "loki-stack"
+            namespace: myapp-use2-argocd
+            project: myapp-use2-infrastructure
+            destination:
+              server: "https://kubernetes.default.svc"
+              namespace: myapp-monitoring-use2
+            sources:
+              - repoURL: "https://grafana.github.io/helm-charts"
+                chart: "loki-stack"
+                targetRevision: "2.10.1"
+                helm:
+                  valueFiles:
+                    - $values/projects/infra/lokiStack/helm-values.yaml
+              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+                targetRevision: main
+                ref: values
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+              syncOptions:
+                - CreateNamespace=true
+
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true

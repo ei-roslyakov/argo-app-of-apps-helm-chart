@@ -11,15 +11,34 @@ spec:
   destination:
     server: {{ .Values.awsLoadBalancerController.destination.server }}
     namespace: {{ .Values.awsLoadBalancerController.destination.namespace }}
-  source:
-    path: {{ .Values.awsLoadBalancerController.source.path }}
-    repoURL: {{ .Values.awsLoadBalancerController.source.repoURL }}
-    targetRevision: {{ .Values.awsLoadBalancerController.source.targetRevision }}
-    chart: {{ .Values.awsLoadBalancerController.source.chart }}
-    {{- if and .Values.awsLoadBalancerController.source.helm (not (empty .Values.awsLoadBalancerController.source.helm.valuesObject)) }}
-    helm:
-      valuesObject: {{ toYaml .Values.awsLoadBalancerController.source.helm.valuesObject | nindent 8 }}
+  sources:
+  {{- range .Values.awsLoadBalancerController.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
     {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
   {{- if and .Values.awsLoadBalancerController.syncPolicy (not (empty .Values.awsLoadBalancerController.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.awsLoadBalancerController.syncPolicy | indent 4 }}

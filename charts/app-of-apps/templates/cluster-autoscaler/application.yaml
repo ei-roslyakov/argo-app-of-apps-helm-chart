@@ -11,15 +11,34 @@ spec:
   destination:
     server: {{ .Values.clusterAutoscaler.destination.server }}
     namespace: {{ .Values.clusterAutoscaler.destination.namespace }}
-  source:
-    path: {{ .Values.clusterAutoscaler.source.path }}
-    repoURL: {{ .Values.clusterAutoscaler.source.repoURL }}
-    targetRevision: {{ .Values.clusterAutoscaler.source.targetRevision }}
-    chart: {{ .Values.clusterAutoscaler.source.chart }}
-    {{- if and .Values.clusterAutoscaler.source.helm (not (empty .Values.clusterAutoscaler.source.helm.valuesObject)) }}
-    helm:
-      valuesObject: {{ toYaml .Values.clusterAutoscaler.source.helm.valuesObject | nindent 8 }}
+  sources:
+  {{- range .Values.clusterAutoscaler.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
     {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
   {{- if and .Values.clusterAutoscaler.syncPolicy (not (empty .Values.clusterAutoscaler.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.clusterAutoscaler.syncPolicy | indent 4 }}

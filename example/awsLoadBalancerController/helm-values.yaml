@@ -1,0 +1,30 @@
+clusterName: c8-eks-cluster-myapp-use2
+createIngressClassResource: true
+region: us-east-2
+vpcId: vpc-0ac15f3b191287be0
+defaultTargetType: ip
+enableWaf: true
+enableWafv2: true
+
+nodeSelector:
+  C8App: "C8App"
+
+replicaCount: 2
+serviceAccount:
+  create: true
+  name: myapp-use2-aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789123:role/myapp-prod-aws-load-balancer-controller
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 1

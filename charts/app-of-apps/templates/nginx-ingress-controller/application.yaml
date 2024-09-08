@@ -11,15 +11,34 @@ spec:
   destination:
     server: {{ .Values.nginxIngressController.destination.server }}
     namespace: {{ .Values.nginxIngressController.destination.namespace }}
-  source:
-    path: {{ .Values.nginxIngressController.source.path }}
-    repoURL: {{ .Values.nginxIngressController.source.repoURL }}
-    targetRevision: {{ .Values.nginxIngressController.source.targetRevision }}
-    chart: {{ .Values.nginxIngressController.source.chart }}
-    {{- if and .Values.nginxIngressController.source.helm (not (empty .Values.nginxIngressController.source.helm.valuesObject)) }}
-    helm:
-      valuesObject: {{ toYaml .Values.nginxIngressController.source.helm.valuesObject | nindent 8 }}
+  sources:
+  {{- range .Values.nginxIngressController.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
     {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
   {{- if and .Values.nginxIngressController.syncPolicy (not (empty .Values.nginxIngressController.syncPolicy)) }}
   syncPolicy:
 {{ toYaml .Values.nginxIngressController.syncPolicy | indent 4 }}

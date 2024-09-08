@@ -1,20 +1,18 @@
-{{- if .Values.rabbitmqClusterOperator.enabled }}
+{{- if .Values.promtail.enabled }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.namePrefix | default "" }}{{ .Values.rabbitmqClusterOperator.name }}{{ .Values.nameSuffix | default "" }}
-  namespace: {{ .Values.rabbitmqClusterOperator.namespace }}
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.promtail.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.promtail.namespace }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
-  project: {{ .Values.rabbitmqClusterOperator.project }}
+  project: {{ .Values.promtail.project }}
   destination:
-    server: {{ .Values.rabbitmqClusterOperator.destination.server }}
-    namespace: {{ .Values.rabbitmqClusterOperator.destination.namespace }}
+    server: {{ .Values.promtail.destination.server }}
+    namespace: {{ .Values.promtail.destination.namespace }}
   sources:
-  {{- range .Values.rabbitmqClusterOperator.sources }}
+  {{- range .Values.promtail.sources }}
   - repoURL: {{ .repoURL }}
     {{- if .targetRevision }}
     targetRevision: {{ .targetRevision }}
@@ -41,8 +39,8 @@ spec:
     ref: {{ .ref }}
     {{- end }}
   {{- end }}
-  {{- if and .Values.rabbitmqClusterOperator.syncPolicy (not (empty .Values.rabbitmqClusterOperator.syncPolicy)) }}
+  {{- if and .Values.promtail.syncPolicy (not (empty .Values.promtail.syncPolicy)) }}
   syncPolicy:
-{{ toYaml .Values.rabbitmqClusterOperator.syncPolicy | indent 4 }}
+{{ toYaml .Values.promtail.syncPolicy | indent 4 }}
   {{- end }}
 {{- end }}

@@ -13,12 +13,12 @@ metricsServer:
     repoURL: "https://kubernetes-sigs.github.io/metrics-server/"
     targetRevision: "3.11.0"
     chart: metrics-server
-    source:
-      path:
-      repoURL: "https://kubernetes.github.io/autoscaler"
+    sources:
+    - repoURL: "https://kubernetes.github.io/autoscaler"
       targetRevision: 9.37.0
       chart: cluster-autoscaler
-    helm:
+      path:
+      helm:
 
 clusterAutoscaler:
   enabled: false
@@ -28,12 +28,12 @@ clusterAutoscaler:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
-  source:
-    path:
-    repoURL: "https://kubernetes.github.io/autoscaler"
+  sources:
+  - repoURL: "https://kubernetes.github.io/autoscaler"
     targetRevision: 9.37.0
+    path:
     chart: cluster-autoscaler
-  helm:
+    helm:
 
 awsNodeTerminationHandler:
   enabled: false
@@ -43,12 +43,12 @@ awsNodeTerminationHandler:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
-  source:
-    path:
-    repoURL: "https://aws.github.io/eks-charts"
+  sources:
+  - repoURL: "https://aws.github.io/eks-charts"
     chart: aws-node-termination-handler
     targetRevision: 0.21.0
-  helm:
+    path:
+    helm:
 
 awsEfsCsiDriver:
   enabled: false
@@ -58,12 +58,12 @@ awsEfsCsiDriver:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
-  source:
-    path:
-    repoURL: "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
+  sources:
+  - repoURL: "https://kubernetes-sigs.github.io/aws-efs-csi-driver"
     targetRevision: 3.0.8
     chart: aws-efs-csi-driver
-  helm:
+    path:
+    helm:
 
 awsLoadBalancerController:
   enabled: false
@@ -73,12 +73,12 @@ awsLoadBalancerController:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
-  source:
-    path:
-    repoURL: "https://aws.github.io/eks-charts"
+  sources:
+  - repoURL: "https://aws.github.io/eks-charts"
     targetRevision: 1.6.2
     chart: aws-load-balancer-controller
-  helm:
+    path:
+    helm:
   ingresses:
 
 nginxIngressController:
@@ -89,12 +89,12 @@ nginxIngressController:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
-  source:
-    path:
-    repoURL: "https://kubernetes.github.io/ingress-nginx"
+  sources:
+  - repoURL: "https://kubernetes.github.io/ingress-nginx"
     targetRevision: 4.11.2
     chart: ingress-nginx
-  helm:
+    path:
+    helm:
 
 externalSecrets:
   enabled: false
@@ -104,28 +104,28 @@ externalSecrets:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
-  source:
-    path:
-    repoURL: "https://charts.external-secrets.io"
+  sources:
+  - repoURL: "https://charts.external-secrets.io"
     targetRevision: 0.9.11
     chart: external-secrets
-  helm:
+    path:
+    helm:
   stores:
 
 redis:
-  enabled: true
+  enabled: false
   name: "redis"
   namespace: 
   project: 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: default
-  source:
-    path:
-    repoURL: registry-1.docker.io/bitnamicharts
+  sources:
+  - repoURL: registry-1.docker.io/bitnamicharts
     chart: redis
     targetRevision: 19.3.2
-  helm:
+    path:
+    helm:
   awsSecretsManager:
     enabled: false
   awsParameterStore:
@@ -138,7 +138,6 @@ redis:
         remoteRef:
           key: "REDIS_PASSWORD"
 
-
 rabbitmqClusterOperator:
   enabled: false
   name: "rabbitmq-cluster-operator"
@@ -147,14 +146,73 @@ rabbitmqClusterOperator:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: default
-  source:
-    path:
-    repoURL: "https://charts.bitnami.com/bitnami"
+  sources:
+  - repoURL: "https://charts.bitnami.com/bitnami"
     chart: "rabbitmq-cluster-operator"
     targetRevision: 3.13.0
-  helm:
+    path:
+    helm:
   awsSecretsManager:
     enabled: false
   awsParameterStore:
     enabled: false
 
+kubePrometheusStack:
+  enabled: false
+  name: "kube-prometheus-stack"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://prometheus-community.github.io/helm-charts"
+    chart: kube-prometheus-stack
+    targetRevision: 56.0.3
+    path:
+    helm:
+
+loki:
+  enabled: false
+  name: "loki"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://grafana.github.io/helm-charts"
+    chart: loki
+    targetRevision: 6.11.0
+    path:
+    helm:
+
+promtail:
+  enabled: false
+  name: "loki"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://grafana.github.io/helm-charts"
+    chart: promtail
+    targetRevision: 6.16.5
+    path:
+    helm:
+
+lokiStack:
+  enabled: true
+  name: "loki"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://grafana.github.io/helm-charts"
+    chart: loki-stack
+    targetRevision: 2.10.1
+    path:
+    helm:

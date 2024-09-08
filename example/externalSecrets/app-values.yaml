@@ -1,0 +1,13 @@
+externalSecrets:
+  stores:
+    - kind: ClusterSecretStore
+      name: aws-parameter-store
+      provider:
+        aws:
+          service: ParameterStore
+          region: us-east-2
+          auth:
+            jwt:
+              serviceAccountRef:
+                name: myapp-external-secrets-use2
+                namespace: myapp-external-secrets-use2

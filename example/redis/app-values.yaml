@@ -1,0 +1,10 @@
+redis:
+  awsParameterStore:
+    enabled: true
+    kind: ClusterSecretStore
+    refreshInterval: 12h
+    secretName: myapp-redis-secrets-use2
+    data:
+      - secretKey: redis-password
+        remoteRef:
+          key: "REDIS_PASSWORD"

@@ -1,0 +1,13 @@
+rabbitmqClusterOperator:
+  awsParameterStore:
+    enabled: true
+    kind: ClusterSecretStore
+    refreshInterval: 12h
+    secretName: myapp-redis-secrets-use2
+    data:
+      - secretKey: username
+        remoteRef:
+          key: "RABBITMQ_USERNAME"
+      - secretKey: password
+        remoteRef:
+          key: "RABBITMQ_PASSWORD"

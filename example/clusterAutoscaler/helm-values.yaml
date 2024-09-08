@@ -1,0 +1,19 @@
+autoDiscovery:
+  clusterName: "c8-eks-cluster-myapp-use2"
+replicaCount: 2
+awsRegion: us-east-2
+resources:
+  limits:
+    cpu: 100m
+    memory: 300Mi
+  requests:
+    cpu: 30m
+    memory: 300Mi
+rbac:
+  create: true
+  serviceAccount:
+    name: myapp-use2-cluster-autoscaler
+    annotations:
+      eks.amazonaws.com/role-arn: "arn:aws:iam::123456789123:role/c8-myapp-prod-cluster-autoscaler-role"
+nodeSelector:
+  C8App: "C8App"
