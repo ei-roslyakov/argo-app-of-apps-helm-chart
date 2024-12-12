@@ -1,0 +1,19 @@
+{{- if .Values.ddAgent.awsSecretsManager.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.ddAgent.name }}-secrets-manager{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.ddAgent.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.ddAgent.awsSecretsManager.refreshInterval }}"
+  secretStoreRef:
+    kind: "{{ default "SecretStore" .Values.ddAgent.awsSecretsManager.kind }}"
+    name: "{{ default "aws-secrets-manager" .Values.ddAgent.awsSecretsManager.secretStoreRef }}"
+  target:
+    creationPolicy: Owner
+    name: "{{ .Values.ddAgent.awsSecretsManager.secretName }}"
+  data:
+{{- toYaml .Values.ddAgent.awsSecretsManager.data | nindent 4 }}
+{{- end }}

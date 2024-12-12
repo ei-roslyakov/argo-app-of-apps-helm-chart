@@ -3,7 +3,7 @@ controller:
     create: true
     name: myapp-use2-efs
     annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::123456789123:role/c8-myapp-prod-efs-role
+      eks.amazonaws.com/role-arn: arn:aws:iam::123456789123:role/my-myapp-prod-efs-role
   resources:
     limits:
       cpu: 200m
@@ -14,7 +14,7 @@ controller:
 
 replicaCount: 1
 nodeSelector:
-  C8App: "C8App"
+  myApp: "myApp"
 
 storageClasses:
   - name: efs-sc

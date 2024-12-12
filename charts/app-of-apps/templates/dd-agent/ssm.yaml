@@ -1,0 +1,20 @@
+{{- if .Values.ddAgent.awsParameterStore.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.ddAgent.name }}-parameter-store{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.ddAgent.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.ddAgent.awsParameterStore.refreshInterval }}"
+  secretStoreRef:
+    name: "{{ default "aws-parameter-store" .Values.ddAgent.awsParameterStore.secretStoreRef }}"
+    kind: "{{ default "SecretStore" .Values.ddAgent.awsParameterStore.kind }}"
+  target:
+    name:  "{{ .Values.ddAgent.awsParameterStore.secretName }}"
+    creationPolicy: Owner
+    deletionPolicy: {{ .Values.ddAgent.awsParameterStore.deletionPolicy | default "Delete" }}
+  data:
+{{- toYaml .Values.ddAgent.awsParameterStore.data | nindent 4 }}
+{{- end }}

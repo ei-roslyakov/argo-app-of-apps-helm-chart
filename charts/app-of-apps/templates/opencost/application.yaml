@@ -1,0 +1,46 @@
+{{- if .Values.opencost.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.opencost.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.opencost.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.opencost.project }}
+  destination:
+    server: {{ .Values.opencost.destination.server }}
+    namespace: {{ .Values.opencost.destination.namespace }}
+  sources:
+  {{- range .Values.opencost.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
+    {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
+  {{- if and .Values.opencost.syncPolicy (not (empty .Values.opencost.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.opencost.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}

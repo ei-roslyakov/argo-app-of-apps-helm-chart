@@ -11,7 +11,7 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
   sources:
-    - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+    - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
       targetRevision: main
       ref: values
     - repoURL: "git@github.com:Configure8inc/argo-app-of-apps.git"
@@ -61,7 +61,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/awsLoadBalancerController/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -84,7 +84,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/nginxIngressController/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -106,7 +106,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/clusterAutoscaler/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -143,7 +143,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/awsEfsCsiDriver/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -166,7 +166,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/externalSecrets/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -192,7 +192,7 @@ spec:
                   helm:
                   valueFiles:
                     - $values/projects/infra/redis/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -217,7 +217,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/rabbitmqClusterOperator/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:
@@ -242,7 +242,7 @@ spec:
                 helm:
                   valueFiles:
                     - $values/projects/infra/lokiStack/helm-values.yaml
-              - repoURL: "git@github.com:Configure8inc/c8-k8s-myapp-infra.git"
+              - repoURL: "git@github.com:Configure8inc/my-k8s-myapp-infra.git"
                 targetRevision: main
                 ref: values
             syncPolicy:

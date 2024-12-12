@@ -31,7 +31,7 @@ master:
     capabilities:
       drop: ["ALL"]
   nodeSelector:
-    C8App: "C8App"
+    myApp: "myApp"
   persistence:
     enabled: true
     storageClass: efs-sc
@@ -65,7 +65,7 @@ replica:
     capabilities:
       drop: ["ALL"]
   nodeSelector:
-    C8App: "C8App"
+    myApp: "myApp"
   persistence:
     enabled: true
     storageClass: efs-sc

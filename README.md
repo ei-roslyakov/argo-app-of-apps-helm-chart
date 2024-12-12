@@ -17,7 +17,6 @@ This Helm chart allows you to deploy multiple applications using Argo CD. It sup
 | `redis`                         | Redis deployment for in-memory caching and data storage in Kubernetes.                         |
 | `kube-prometheus-stack`         | Monitoring stack built with Prometheus and Grafana.                                             |
 
-
 ## Overview
 
 This Helm chart is designed to deploy multiple applications managed by Argo CD in a Kubernetes cluster. It supports various controllers and drivers, such as AWS Load Balancer Controller, Nginx Ingress Controller, Cluster Autoscaler, AWS EFS CSI Driver, and AWS Node Termination Handler.
@@ -57,6 +56,7 @@ The following global parameters can be configured in the values.yaml file:
 | nameSuffix  | Suffix for application names     | -use2   |
 
 ### Application-Specific Configuration
+
 Each application has its own set of configurable parameters in the `values.yaml` file. Below are the common parameters:
 
 * `enabled`: Enable or disable the application deployment.
@@ -82,6 +82,7 @@ Each application has its own set of configurable parameters in the `values.yaml`
     * `data`: Specifies the mapping of Kubernetes secret keys to the external secret management keys in AWS Parameter Store.
 
 #### Multiple Sources Support
+
 There is the possibility to use multiple sources in the application definition. Here is an example of using multiple sources:
 
 ```yaml
@@ -92,7 +93,7 @@ sources:
     helm:
       valueFiles:
         - $values/projects/infra/rabbitmqClusterOperator/helm-values.yaml
-  - repoURL: 'git@github.com:Configure8inc/c8-k8s-yahoo-infra.git'
+  - repoURL: 'git@github.com:Configure8inc/my-k8s-mycompany-infra.git'
     targetRevision: main
     ref: values
 ```
@@ -103,7 +104,7 @@ The main application can include additional application variables or other confi
 
 ```yaml
 sources:
-  - repoURL: 'git@github.com:Configure8inc/c8-k8s-yahoo-infra.git'
+  - repoURL: 'git@github.com:Configure8inc/my-k8s-mycompany-infra.git'
     targetRevision: main
     ref: values
   - repoURL: "git@github.com:Configure8inc/argo-app-of-apps.git"
@@ -147,7 +148,7 @@ rabbitmqClusterOperator:
     valuesObject:
       clusterOperator:
         nodeSelector:
-          C8App: "C8App"
+          myApp: "myApp"
   awsSecretsManager:
     enabled: true
     kind: ClusterSecretStore
@@ -169,5 +170,3 @@ rabbitmqClusterOperator:
     syncOptions:
       - CreateNamespace=true
 ```
-
-"You can find a complete example of usage in the `example` folder."

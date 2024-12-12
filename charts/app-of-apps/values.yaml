@@ -1,6 +1,8 @@
 namePrefix: "myapp-"
 nameSuffix: "-use2"
 
+roles:
+
 metricsServer:
   enabled: false
   name: "metrics-server"
@@ -171,6 +173,10 @@ kubePrometheusStack:
     targetRevision: 56.0.3
     path:
     helm:
+  awsSecretsManager:
+    enabled: false
+  awsParameterStore:
+    enabled: false
 
 loki:
   enabled: false
@@ -203,7 +209,7 @@ promtail:
     helm:
 
 lokiStack:
-  enabled: true
+  enabled: false
   name: "loki"
   namespace: monitoring
   project: default
@@ -214,5 +220,54 @@ lokiStack:
   - repoURL: "https://grafana.github.io/helm-charts"
     chart: loki-stack
     targetRevision: 2.10.1
+    path:
+    helm:
+
+ddAgent:
+  enabled: false
+  name: "dd-agent"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://helm.datadoghq.com"
+    chart: datadog
+    targetRevision: 3.68.0
+    path:
+    helm:
+  awsSecretsManager:
+    enabled: false
+  awsParameterStore:
+    enabled: false
+
+opencost:
+  enabled: false
+  name: "opencost"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://opencost.github.io/opencost-helm-chart"
+    chart: opencost
+    targetRevision: 1.29.0
+    path:
+    helm:
+
+trivyOperator:
+  enabled: false
+  name: "trivy"
+  namespace: monitoring
+  project: default
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  sources:
+  - repoURL: "https://aquasecurity.github.io/helm-charts"
+    chart: trivy-operator
+    targetRevision: 0.20.2
     path:
     helm:

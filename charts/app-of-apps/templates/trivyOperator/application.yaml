@@ -1,0 +1,46 @@
+{{- if .Values.trivyOperator.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.trivyOperator.name }}{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.trivyOperator.namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.trivyOperator.project }}
+  destination:
+    server: {{ .Values.trivyOperator.destination.server }}
+    namespace: {{ .Values.trivyOperator.destination.namespace }}
+  sources:
+  {{- range .Values.trivyOperator.sources }}
+  - repoURL: {{ .repoURL }}
+    {{- if .targetRevision }}
+    targetRevision: {{ .targetRevision }}
+    {{- end }}
+    {{- if .path }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- end }}
+    {{- if .helm }}
+    helm:
+      {{- if .helm.valuesObject }}
+      valuesObject: {{ toYaml .helm.valuesObject | nindent 8 }}
+      {{- end }}
+      {{- if .helm.valueFiles }}
+      valueFiles:
+      {{- range .helm.valueFiles }}
+        - {{ . }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .ref }}
+    ref: {{ .ref }}
+    {{- end }}
+  {{- end }}
+  {{- if and .Values.trivyOperator.syncPolicy (not (empty .Values.trivyOperator.syncPolicy)) }}
+  syncPolicy:
+{{ toYaml .Values.trivyOperator.syncPolicy | indent 4 }}
+  {{- end }}
+{{- end }}

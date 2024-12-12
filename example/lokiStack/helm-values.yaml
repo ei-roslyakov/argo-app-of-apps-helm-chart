@@ -9,7 +9,7 @@ loki:
         paths: ["/"]
 
   nodeSelector:
-    C8App: "C8App"
+    myApp: "myApp"
 
   resources:
     limits:
@@ -40,7 +40,7 @@ loki:
     create: true
     name: "myapp-loki-use2"
     annotations:
-      eks.amazonaws.com/role-arn: "arn:aws:iam::123456789123:role/c8-myapp-prod-loki-logs-role"
+      eks.amazonaws.com/role-arn: "arn:aws:iam::123456789123:role/my-myapp-prod-loki-logs-role"
 
   # https://grafana.com/docs/loki/latest/configuration/#configuring-grafana-loki
   config:
@@ -113,7 +113,7 @@ promtail:
       extraRelabelConfigs:
         - action: replace
           source_labels:
-            - __meta_kubernetes_pod_label_c8app
-          target_label: c8app
+            - __meta_kubernetes_pod_label_myapp
+          target_label: myapp
 grafana:
   enabled: false

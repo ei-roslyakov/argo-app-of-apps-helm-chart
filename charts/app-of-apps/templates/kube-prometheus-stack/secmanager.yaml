@@ -1,0 +1,19 @@
+{{- if .Values.kubePrometheusStack.awsSecretsManager.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.kubePrometheusStack.name }}-secrets-manager{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.kubePrometheusStack.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.kubePrometheusStack.awsSecretsManager.refreshInterval }}"
+  secretStoreRef:
+    kind: "{{ default "SecretStore" .Values.kubePrometheusStack.awsSecretsManager.kind }}"
+    name: "{{ default "aws-secrets-manager" .Values.kubePrometheusStack.awsSecretsManager.secretStoreRef }}"
+  target:
+    creationPolicy: Owner
+    name: "{{ .Values.kubePrometheusStack.awsSecretsManager.secretName }}"
+  data:
+{{- toYaml .Values.kubePrometheusStack.awsSecretsManager.data | nindent 4 }}
+{{- end }}

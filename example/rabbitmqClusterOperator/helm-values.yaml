@@ -1,6 +1,6 @@
 clusterOperator:
   nodeSelector:
-    C8App: "C8App"
+    myApp: "myApp"
 
 extraDeploy:
   - apiVersion: rabbitmq.com/v1beta1
@@ -24,10 +24,10 @@ extraDeploy:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: C8App
+                  - key: myApp
                     operator: In
                     values:
-                      - C8App
+                      - myApp
       image: bitnami/rabbitmq:3.11-debian-11
       service:
         type: ClusterIP
@@ -58,7 +58,7 @@ extraDeploy:
   - apiVersion: rabbitmq.com/v1beta1
     kind: User
     metadata:
-      name: c8
+      name: my
       namespace: myapp-rabbitmq-use2
     spec:
       tags:
@@ -75,7 +75,7 @@ extraDeploy:
       namespace: myapp-rabbitmq-use2
     spec:
       vhost: "/"
-      user: "c8" # name of the RabbitMQ user
+      user: "my" # name of the RabbitMQ user
       permissions:
         write: ".*"
         configure: ".*"

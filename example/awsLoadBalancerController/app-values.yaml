@@ -7,7 +7,7 @@ awsLoadBalancerController:
         alb.ingress.kubernetes.io/target-type: ip
         alb.ingress.kubernetes.io/group.name: myapp-external-use2
         alb.ingress.kubernetes.io/load-balancer-name: myapp-external-use2
-        alb.ingress.kubernetes.io/tags: business_unit=myapp,team=DevOps,owner=configure8,ManagedBy=Argo,application=c8
+        alb.ingress.kubernetes.io/tags: business_unit=myapp,team=DevOps,owner=configure8,ManagedBy=Argo,application=my
         alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:123456789123:certificate/19009c7e-eab5-4e18-8aa8-5c367a92276c
         alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
         alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
@@ -51,7 +51,7 @@ awsLoadBalancerController:
         alb.ingress.kubernetes.io/target-type: ip
         alb.ingress.kubernetes.io/group.name: myapp-internal-use2
         alb.ingress.kubernetes.io/load-balancer-name: myapp-internal-use2
-        alb.ingress.kubernetes.io/tags: business_unit=myapp,team=DevOps,owner=configure8,ManagedBy=Argo,application=c8
+        alb.ingress.kubernetes.io/tags: business_unit=myapp,team=DevOps,owner=configure8,ManagedBy=Argo,application=my
         alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:123456789123:certificate/19009c7e-eab5-4e18-8aa8-5c367a92276c
         alb.ingress.kubernetes.io/inbound-cidrs: 10.100.0.0/20
         alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'

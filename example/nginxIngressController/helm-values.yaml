@@ -28,7 +28,7 @@ controller:
   replicaCount: 2
 
   nodeSelector:
-    C8App: "C8App"
+    myApp: "myApp"
 
   updateStrategy:
     type: RollingUpdate

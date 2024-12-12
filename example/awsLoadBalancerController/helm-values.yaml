@@ -1,4 +1,4 @@
-clusterName: c8-eks-cluster-myapp-use2
+clusterName: my-eks-cluster-myapp-use2
 createIngressClassResource: true
 region: us-east-2
 vpcId: vpc-0ac15f3b191287be0
@@ -7,7 +7,7 @@ enableWaf: true
 enableWafv2: true
 
 nodeSelector:
-  C8App: "C8App"
+  myApp: "myApp"
 
 replicaCount: 2
 serviceAccount:

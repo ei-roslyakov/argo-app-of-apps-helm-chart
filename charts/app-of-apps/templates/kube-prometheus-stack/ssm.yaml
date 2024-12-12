@@ -1,0 +1,20 @@
+{{- if .Values.kubePrometheusStack.awsParameterStore.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: {{ .Values.namePrefix | default "" }}{{ .Values.kubePrometheusStack.name }}-parameter-store{{ .Values.nameSuffix | default "" }}
+  namespace: {{ .Values.kubePrometheusStack.destination.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  refreshInterval: "{{ default "0" .Values.kubePrometheusStack.awsParameterStore.refreshInterval }}"
+  secretStoreRef:
+    name: "{{ default "aws-parameter-store" .Values.kubePrometheusStack.awsParameterStore.secretStoreRef }}"
+    kind: "{{ default "SecretStore" .Values.kubePrometheusStack.awsParameterStore.kind }}"
+  target:
+    name:  "{{ .Values.kubePrometheusStack.awsParameterStore.secretName }}"
+    creationPolicy: Owner
+    deletionPolicy: {{ .Values.kubePrometheusStack.awsParameterStore.deletionPolicy | default "Delete" }}
+  data:
+{{- toYaml .Values.kubePrometheusStack.awsParameterStore.data | nindent 4 }}
+{{- end }}
